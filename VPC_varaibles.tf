@@ -1,4 +1,4 @@
-variable "main_vpc_cidr" {
+variable "VPC_main" {
  default =  "10.0.0.0/24"
 }
 variable "public_subnets" {
