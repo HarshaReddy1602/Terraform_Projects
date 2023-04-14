@@ -1,3 +1,4 @@
+#terraform version
 terraform {
   required_providers {
     aws = {
@@ -7,42 +8,44 @@ terraform {
   }
 }
 
-# Configure the AWS Provider
+# Configuring the provider details, here i am using AWS
 provider "aws" {
   region = "us-east-1"
 }
-# Create the VPC
- resource "aws_vpc" "Main" {                # Creating VPC here
-   cidr_block       = var.main_vpc_cidr     # Defining the CIDR block use 10.0.0.0/24 for demo
+# Creating the VPC
+ resource "aws_vpc" "Harsha_VPC" {                
+   #Defining CIDR block
+   cidr_block       = var.VPC_main     
    instance_tenancy = "default"
  }
-# Create Internet Gateway and attach it to VPC
- resource "aws_internet_gateway" "IGW" {    # Creating Internet Gateway
-    vpc_id =  aws_vpc.Main.id               # vpc_id will be generated after we create VPC
+# Creating Internet Gateway and assigning to VPC
+
+ resource "aws_internet_gateway" "Gateway" {    
+    vpc_id =  aws_vpc.Harsha_VPC.id               
  }
-# Create a Public Subnets.
- resource "aws_subnet" "publicsubnets" {    # Creating Public Subnets
-   vpc_id =  aws_vpc.Main.id
-   cidr_block = "${var.public_subnets}"        # CIDR block of public subnets
+# Creating a Public Subnets.
+ resource "aws_subnet" "publicsubnets" {    
+   vpc_id =  aws_vpc.Harsha_VPC.id
+   cidr_block = "${var.public_subnets}"       
  }
-# Create a Private Subnet                   # Creating Private Subnets
+# Creating a Private Subnet                  
  resource "aws_subnet" "privatesubnets" {
-   vpc_id =  aws_vpc.Main.id
-   cidr_block = "${var.private_subnets}"          # CIDR block of private subnets
+   vpc_id =  aws_vpc.Harsha_VPC.id
+   cidr_block = "${var.private_subnets}"          
  }
-# Route table for Public Subnet's
- resource "aws_route_table" "PublicRT" {    # Creating RT for Public Subnet
-    vpc_id =  aws_vpc.Main.id
+# defining Route table for Public Subnet's
+ resource "aws_route_table" "PublicRT" {    
+    vpc_id =  aws_vpc.Harsha_VPC.id
          route {
-    cidr_block = "0.0.0.0/0"               # Traffic from Public Subnet reaches Internet via Internet Gateway
-    gateway_id = aws_internet_gateway.IGW.id
+    cidr_block = "0.0.0.0/0"               
+    gateway_id = aws_internet_gateway.Gateway.id
      }
  }
- # Route table for Private Subnet's
- resource "aws_route_table" "PrivateRT" {    # Creating RT for Private Subnet
-   vpc_id = aws_vpc.Main.id
+ # defining Route table for Private Subnet's
+ resource "aws_route_table" "PrivateRT" {    
+   vpc_id = aws_vpc.Harsha_VPC.id
    route {
-   cidr_block = "0.0.0.0/0"             # Traffic from Private Subnet reaches Internet via NAT Gateway
+   cidr_block = "0.0.0.0/0"            
    nat_gateway_id = aws_nat_gateway.NATgw.id
    }
  }
