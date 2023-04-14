@@ -4,7 +4,7 @@
 3) Creating Public Subnet
 4) Creating Private Subnet
 5) Creating Routing Table for both the subnets for traffic flow and associate to their respective subnets
-6) Creates a NAT Gateway to enable private subnets to reach out to the internet without any need of an externally routable IP address assigned to each resource.
+6) Creates a NAT Gateway to enable private subnets to reach out to the internet without any need of an externally routable IP address assigned to each resource. */
 
 
 
