@@ -1,3 +1,13 @@
+/* In this project we are 
+1) Creating a VPC
+2) Creating an internet gateway and assigning it to the VPC
+3) Creating Public Subnet
+4) Creating Private Subnet
+5) Creating Routing Table for both the subnets for traffic flow and associate to their respective subnets
+6) Creates a NAT Gateway to enable private subnets to reach out to the internet without any need of an externally routable IP address assigned to each resource.
+
+
+
 #terraform version
 terraform {
   required_providers {
@@ -12,28 +22,28 @@ terraform {
 provider "aws" {
   region = "us-east-1"
 }
-# Creating the VPC
+
  resource "aws_vpc" "Harsha_VPC" {                
    #Defining CIDR block
    cidr_block       = var.VPC_main     
    instance_tenancy = "default"
  }
-# Creating Internet Gateway and assigning to VPC
+
 
  resource "aws_internet_gateway" "Gateway" {    
     vpc_id =  aws_vpc.Harsha_VPC.id               
  }
-# Creating a Public Subnets.
- resource "aws_subnet" "publicsubnets" {    
+
+ resource "aws_subnet" "pubsubnets" {    
    vpc_id =  aws_vpc.Harsha_VPC.id
    cidr_block = "${var.public_subnets}"       
  }
-# Creating a Private Subnet                  
- resource "aws_subnet" "privatesubnets" {
+                 
+ resource "aws_subnet" "pvtsubnets" {
    vpc_id =  aws_vpc.Harsha_VPC.id
    cidr_block = "${var.private_subnets}"          
  }
-# defining Route table for Public Subnet's
+
  resource "aws_route_table" "PublicRT" {    
     vpc_id =  aws_vpc.Harsha_VPC.id
          route {
@@ -41,29 +51,29 @@ provider "aws" {
     gateway_id = aws_internet_gateway.Gateway.id
      }
  }
- # defining Route table for Private Subnet's
+
  resource "aws_route_table" "PrivateRT" {    
    vpc_id = aws_vpc.Harsha_VPC.id
    route {
    cidr_block = "0.0.0.0/0"            
-   nat_gateway_id = aws_nat_gateway.NATgw.id
+   nat_gateway_id = aws_nat_gateway.NATgateway.id
    }
  }
- # Route table Association with Public Subnet's
- resource "aws_route_table_association" "PublicRTassociation" {
-    subnet_id = aws_subnet.publicsubnets.id
+
+ resource "aws_route_table_association" "Associating_PublicRT" {
+    subnet_id = aws_subnet.pubsubnets.id
     route_table_id = aws_route_table.PublicRT.id
  }
- # Route table Association with Private Subnet's
- resource "aws_route_table_association" "PrivateRTassociation" {
-    subnet_id = aws_subnet.privatesubnets.id
+
+ resource "aws_route_table_association" "Associating_PrivateRT" {
+    subnet_id = aws_subnet.pvtsubnets.id
     route_table_id = aws_route_table.PrivateRT.id
  }
- resource "aws_eip" "nateIP" {
+ resource "aws_eip" "EIP" {
    vpc   = true
  }
- # Creating the NAT Gateway using subnet_id and allocation_id
- resource "aws_nat_gateway" "NATgw" {
-   allocation_id = aws_eip.nateIP.id
-   subnet_id = aws_subnet.publicsubnets.id
+ 
+ resource "aws_nat_gateway" "NATgateway" {
+   allocation_id = aws_eip.EIP.id
+   subnet_id = aws_subnet.pubsubnets.id
  }
