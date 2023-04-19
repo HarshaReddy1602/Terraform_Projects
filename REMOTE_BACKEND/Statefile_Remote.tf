@@ -1,3 +1,4 @@
+#In this tf file, i just created a simple EC2 instance and storing its state file in the S3 bucket created previously and using dynamo db table for state locking.
 terraform {
     backend "s3" {
       # Replace this with your bucket name!
