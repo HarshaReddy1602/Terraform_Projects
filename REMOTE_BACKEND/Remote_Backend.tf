@@ -1,7 +1,8 @@
-/*By running the “terraform plan” or the “terrafom apply” commands, a file called terraform.
-  tfstate is created which contains a list of infrastructure resources in JSON format. */
-  /*In this project we are creating an S3 bucket for storing the statefiles and using dynamo table for state locking */     
-/* create and S3 bucket with versioning enabled for it, and also enable Server-side encryption, and create one dynamodb table */
+#By running the “terraform plan” or the “terrafom apply” commands, a file called terraform.
+  #tfstate is created which contains a list of infrastructure resources in JSON format. 
+ # In this project we are creating an S3 bucket for storing the statefiles and using dynamo table for state locking    
+#create and S3 bucket with versioning enabled for it, and also enable Server-side encryption, and create one dynamodb table 
+# after creating the above resources create another tf file for which you want to store the state file in the S3 bucket, (check another file in the same folder) */
 
 terraform {
   required_version = ">= 1.0.0, < 2.0.0"
