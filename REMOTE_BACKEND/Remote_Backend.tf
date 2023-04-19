@@ -1,3 +1,8 @@
+/*By running the “terraform plan” or the “terrafom apply” commands, a file called terraform.
+  tfstate is created which contains a list of infrastructure resources in JSON format. */
+  /*In this project we are creating an S3 bucket for storing the statefiles and using dynamo table for state locking */     
+/* create and S3 bucket with versioning enabled for it, and also enable Server-side encryption, and create one dynamodb table */
+
 terraform {
   required_version = ">= 1.0.0, < 2.0.0"
 
@@ -8,7 +13,6 @@ terraform {
     }
   }
 }
-
 provider "aws" {
   region = "us-east-2"
 }
@@ -16,16 +20,13 @@ provider "aws" {
 resource "aws_s3_bucket" "terraform_state" {
 
   bucket = "statefilesofharsha"
-
-  // This is only here so we can destroy the bucket as part of automated tests. You should not copy this for production
-  // usage
   force_destroy = true
 
 }
 
-# Enable versioning so you can see the full revision history of your
-# state files
-resource "aws_s3_bucket_versioning" "enabled" {
+# Enable versioning so you can see the full revision history of your state files
+
+resource "aws_s3_bucket_versioning" "version" {
   bucket = aws_s3_bucket.terraform_state.id
   versioning_configuration {
     status = "Enabled"
